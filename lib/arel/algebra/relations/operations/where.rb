@@ -1,4 +1,5 @@
 module Arel
+  # TODO: Where should be renamed to Restriction
   class Where < Compound
     attributes :relation, :predicates
     deriving   :==
@@ -13,5 +14,30 @@ module Arel
     def wheres
       @wheres ||= relation.wheres + predicates
     end
+
+    def optimized
+      case relation
+      when Where then collapse_restrictions
+      else
+        super
+      end
+    end
+
+  private
+
+    def collapse_restrictions
+      collapsed = Where.new(relation.relation, relation.predicates + predicates)
+
+      # That was easy
+      return collapsed.optimized if engine_handles?(collapsed)
+
+      # Swap the relations if needed
+      if engine_handles?(self) && !engine_handles?(relation)
+        Where.new(Where.new(relation.relation, predicates), relation.predicates).optimized
+      else
+        self
+      end
+    end
+
   end
 end

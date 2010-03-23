@@ -44,6 +44,12 @@ module Arel
     def engine
       relation1.engine != relation2.engine ? Memory::Engine.new : relation1.engine
     end
+
+    def root_engine
+      if relation1.respond_to?(:engine) && relation2.respond_to?(:engine)
+        relation1.engine == relation2.engine && relation1.engine
+      end
+    end
   end
 
   class InnerJoin  < Join; end

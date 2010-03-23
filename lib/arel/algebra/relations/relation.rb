@@ -14,6 +14,18 @@ module Arel
       self
     end
 
+    def root_engine
+      engine
+    end
+
+    def engine_handles?(relation)
+      root_engine.nil? || !root_engine.respond_to?(:handles?) || root_engine.handles?(relation)
+    end
+
+    def optimized
+      self
+    end
+
     module Enumerable
       include ::Enumerable
 

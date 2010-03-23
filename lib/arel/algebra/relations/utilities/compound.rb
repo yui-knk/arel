@@ -34,11 +34,7 @@ module Arel
       engine   = relation.engine
 
       # Temporary check of whether or not the engine supports where.
-      if requires && engine.respond_to?(:supports) && !engine.supports(requires)
-        Memory::Engine.new
-      else
-        engine
-      end
+      engine_handles?(self) ? engine : Memory::Engine.new
     end
 
   private

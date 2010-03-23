@@ -7,7 +7,7 @@ module Arel
         @rows = []
       end
 
-      def supports(operation)
+      def handles?(relation)
         false
       end
 

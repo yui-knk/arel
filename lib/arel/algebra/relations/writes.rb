@@ -6,6 +6,10 @@ module Arel
     def call
       engine.delete(self)
     end
+
+    def engine_handles?(relation)
+      true
+    end
   end
 
   class Insert < Compound
@@ -19,6 +23,10 @@ module Arel
     def call
       engine.create(self)
     end
+
+    def engine_handles?(relation)
+      true
+    end
   end
 
   class Update < Compound
@@ -31,6 +39,10 @@ module Arel
 
     def call
       engine.update(self)
+    end
+
+    def engine_handles?(relation)
+      true
     end
   end
 end
