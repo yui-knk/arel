@@ -1,5 +1,3 @@
-require 'active_support/core_ext/array/wrap'
-
 module Arel
   module Relation
     include Enumerable
@@ -134,7 +132,7 @@ module Arel
     end
 
     def where clause = nil
-      clause ? Where.new(self, Array.wrap(clause)) : self
+      clause ? Where.new(self, [clause].flatten) : self
     end
 
     def skip thing = nil
