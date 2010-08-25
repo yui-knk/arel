@@ -118,5 +118,28 @@ module Arel
         Table.new(:users, engine = Sql::Engine.new).engine.should == engine
       end
     end
+
+    describe 'lazy evaluation' do
+      before do
+        @relation = Table.new(:authors)
+        ActiveRecord::Base.connection.execute('CREATE TABLE authors (id INTEGER)')
+      end
+
+      after do
+        ActiveRecord::Base.connection.execute('DROP TABLE authors')
+      end
+
+      describe '#table_exists?' do
+        it 'detects a table that was created after the model has loaded' do
+          @relation.table_exists?.should be_true
+        end
+      end
+
+      describe '#attributes' do
+        it 'detects attributes from a table that was created after the model has loaded' do
+          @relation.attributes.should == [Attribute.new(@relation, :id)]
+        end
+      end
+    end
   end
 end
