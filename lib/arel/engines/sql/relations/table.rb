@@ -31,7 +31,8 @@ module Arel
           @table_alias = as unless as == @name
         end
       else
-        @engine = options # Table.new('foo', engine)
+        @engine  = options # Table.new('foo', engine)
+        @options = {}
       end
 
       if @engine.connection
@@ -48,6 +49,10 @@ module Arel
 
         @@tables ||= engine.connection.tables
       end
+    end
+
+    def table_exists?
+      @table_exists ||= @@tables.include?(name) || engine.connection.table_exists?(name)
     end
 
     def as(table_alias)
