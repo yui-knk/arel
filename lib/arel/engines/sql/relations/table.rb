@@ -51,10 +51,6 @@ module Arel
       end
     end
 
-    def table_exists?
-      @table_exists ||= @@tables.include?(name) || engine.connection.table_exists?(name)
-    end
-
     def as(table_alias)
       Table.new(name, options.merge(:as => table_alias))
     end
