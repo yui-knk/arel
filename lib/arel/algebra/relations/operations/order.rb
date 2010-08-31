@@ -10,7 +10,7 @@ module Arel
     # TESTME
     def orders
       # QUESTION - do we still need relation.orders ?
-      (orderings + relation.orders).collect { |o| o.bind(self) }.collect { |o| o.to_ordering }
+      @orders ||= (orderings + relation.orders).collect { |o| o.bind(self) }.collect { |o| o.to_ordering }
     end
 
     def eval
