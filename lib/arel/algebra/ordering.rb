@@ -1,9 +1,11 @@
 module Arel
   class Ordering < Struct.new(:attribute)
-    delegate :relation, :to => :attribute
-
     def bind(relation)
       self.class.new(attribute.bind(relation))
+    end
+
+    def relation
+      attribute.relation
     end
 
     def to_ordering

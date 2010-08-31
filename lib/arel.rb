@@ -1,7 +1,3 @@
-require 'active_support/inflector'
-require 'active_support/core_ext/module/delegation'
-require 'active_support/core_ext/object/blank'
-
 require 'arel/recursion/base_case'
 
 module Arel
