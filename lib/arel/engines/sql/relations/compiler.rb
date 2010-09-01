@@ -15,7 +15,7 @@ module Arel
       def select_sql
         projections = @relation.projections
         if Count === projections.first && projections.size == 1 &&
-          (relation.taken.present? || relation.wheres.present?) && relation.joins(self).blank?
+          relation.taken.present? && relation.joins(self).blank?
           subquery = [
             "SELECT 1 FROM #{relation.from_clauses}", build_clauses
           ].join ' '
