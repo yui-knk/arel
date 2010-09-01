@@ -149,7 +149,7 @@ module Arel
 
         describe 'when given a blank number of items' do
           it 'raises error' do
-            lambda { @relation.take }.should raise_exception
+            lambda { @relation.take }.should raise_error(ArgumentError, "wrong number of arguments (0 for 1)")
           end
         end
       end
