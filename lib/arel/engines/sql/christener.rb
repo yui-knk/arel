@@ -1,6 +1,8 @@
 module Arel
   module Sql
     class Christener
+      attr_accessor :names
+
       def initialize
         @names = {}
       end

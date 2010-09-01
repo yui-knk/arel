@@ -107,18 +107,25 @@ module Arel
     end
 
     class TableReference < Formatter
+      @@table_names = {}
+
       def select(select_sql, table)
         "(#{select_sql}) #{quote_table_name(name_for(table))}"
       end
 
       def table(table)
         table_name = table.name
-        return table_name if table_name =~ /\s/
+        key = "#{table_name}_#{table.table_alias}"
 
-        unique_name = name_for(table)
-
-        quote_table_name(table_name) +
+        if table_name =~ /\s/
+          table_name
+        elsif @@table_names[key] && !@christener.names.include?(table_name)
+          @@table_names[key]
+        else
+          unique_name = name_for(table)
+          @@table_names[key] = quote_table_name(table_name) +
           (table_name != unique_name ? " #{quote_table_name(unique_name)}" : '')
+        end
       end
     end
 
