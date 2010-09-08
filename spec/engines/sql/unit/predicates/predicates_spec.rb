@@ -15,10 +15,14 @@ module Arel
         describe "#to_sql" do
           it "manufactures sql with an AND operation" do
             sql = @operand1.and(@operand2).to_sql
+            full_sql = @relation.where(@operand1.and(@operand2)).to_sql
 
             adapter_is :mysql do
               sql.should be_like(%Q{
                 (`users`.`id` = 1 AND `users`.`name` = 'name')
+              })
+              full_sql.should be_like(%Q{
+                SELECT `users`.`id`, `users`.`name` FROM `users` WHERE `users`.`id` = 1 AND `users`.`name` = 'name'
               })
             end
 
@@ -26,17 +30,26 @@ module Arel
               sql.should be_like(%Q{
                 ("users"."id" = 1 AND "users"."name" = 'name')
               })
+              full_sql.should be_like(%Q{
+                SELECT "users"."id", "users"."name" FROM "users" WHERE "users"."id" = 1 AND "users"."name" = 'name'
+              })
             end
 
             adapter_is :postgresql do
               sql.should be_like(%Q{
                 ("users"."id" = 1 AND "users"."name" = E'name')
               })
+              full_sql.should be_like(%Q{
+                SELECT "users"."id", "users"."name" FROM "users" WHERE "users"."id" = 1 AND "users"."name" = E'name'
+              })
             end
 
             adapter_is :oracle do
               sql.should be_like(%Q{
                 ("USERS"."ID" = 1 AND "USERS"."NAME" = 'name')
+              })
+              full_sql.should be_like(%Q{
+                SELECT "users"."id", "users"."name" FROM "users" WHERE "users"."id" = 1 AND "users"."name" = 'name'
               })
             end
           end

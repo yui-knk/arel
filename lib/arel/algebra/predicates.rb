@@ -190,6 +190,10 @@ module Arel
       def predicate_sql
         operand2.equality_predicate_sql
       end
+
+      def format(operand)
+        operand1.format(operand)
+      end      
     end
 
     class Inequality < Equality
