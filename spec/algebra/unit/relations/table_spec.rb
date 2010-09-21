@@ -6,6 +6,13 @@ module Arel
       @relation = Table.new(:users)
     end
 
+    describe 'new' do
+      it 'takes :columns' do
+        @relation = Table.new(:users, :columns => "foo")
+        check @relation.columns.should == "foo"
+      end
+    end
+
     describe '[]' do
       describe 'when given a', Symbol do
         it "manufactures an attribute if the symbol names an attribute within the relation" do

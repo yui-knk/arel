@@ -13,6 +13,7 @@ module Arel
     end
 
     attr_reader :name, :engine, :table_alias, :options, :christener
+    attr_writer :columns
 
     def initialize(name, options = {})
       @name = name.to_s
@@ -21,6 +22,7 @@ module Arel
       @christener = Sql::Christener.new
       @attributes = nil
       @matching_attributes = nil
+      @columns = nil
 
       if options.is_a?(Hash)
         @options = options
@@ -30,6 +32,7 @@ module Arel
           as = options[:as].to_s
           @table_alias = as unless as == @name
         end
+        @columns = options[:columns]
       else
         @engine  = options # Table.new('foo', engine)
         @options = {}
