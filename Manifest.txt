@@ -39,6 +39,7 @@ lib/arel/nodes/insert_statement.rb
 lib/arel/nodes/join.rb
 lib/arel/nodes/less_than.rb
 lib/arel/nodes/less_than_or_equal.rb
+lib/arel/nodes/limit.rb
 lib/arel/nodes/lock.rb
 lib/arel/nodes/matches.rb
 lib/arel/nodes/max.rb
@@ -58,6 +59,7 @@ lib/arel/nodes/sql_literal.rb
 lib/arel/nodes/string_join.rb
 lib/arel/nodes/sum.rb
 lib/arel/nodes/table_alias.rb
+lib/arel/nodes/top.rb
 lib/arel/nodes/unary.rb
 lib/arel/nodes/unqualified_column.rb
 lib/arel/nodes/update_statement.rb
@@ -74,6 +76,7 @@ lib/arel/visitors.rb
 lib/arel/visitors/depth_first.rb
 lib/arel/visitors/dot.rb
 lib/arel/visitors/join_sql.rb
+lib/arel/visitors/mssql.rb
 lib/arel/visitors/mysql.rb
 lib/arel/visitors/oracle.rb
 lib/arel/visitors/order_clauses.rb
@@ -109,6 +112,7 @@ test/test_update_manager.rb
 test/visitors/test_depth_first.rb
 test/visitors/test_dot.rb
 test/visitors/test_join_sql.rb
+test/visitors/test_mssql.rb
 test/visitors/test_mysql.rb
 test/visitors/test_oracle.rb
 test/visitors/test_postgres.rb
