@@ -130,6 +130,26 @@ module Arel
       Nodes::SqlLiteral.new viz.accept @ctx
     end
 
+    def union operation, other = nil
+      if other
+        node_class = Nodes.const_get("Union#{operation.to_s.capitalize}")
+      else
+        other = operation
+        node_class = Nodes::Union
+      end
+
+      node_class.new self.ast, other.ast
+    end
+
+    def intersect other
+      Nodes::Intersect.new ast, other.ast
+    end
+
+    def except other
+      Nodes::Except.new ast, other.ast
+    end
+    alias :minus :except
+
     def take limit
       @ast.limit = Nodes::Limit.new(limit)
       @ctx.top   = Nodes::Top.new(limit)

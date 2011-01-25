@@ -596,4 +596,46 @@ module Arel
       end
     end
   end
+
+  describe 'set operations' do
+    before do
+      @table = Table.new :users
+      @m1 = Arel::SelectManager.new Table.engine, @table
+      @m1.project Arel.sql('*')
+      @m2 = Arel::SelectManager.new Table.engine, @table
+      @m2.project Arel.sql('*')
+    end
+
+    it 'supports union' do
+      @m1.where(@table[:id].lt(18))
+      @m2.where(@table[:id].gt(99))
+      (@m1.union @m2).to_sql.must_be_like %{
+        ( SELECT * FROM "users"  WHERE "users"."id" < 18 UNION SELECT * FROM "users"  WHERE "users"."id" > 99 )
+      }
+    end
+
+    it 'supports union all' do
+      @m1.where(@table[:id].lt(18))
+      @m2.where(@table[:id].gt(99))
+      (@m1.union :all, @m2).to_sql.must_be_like %{
+        ( SELECT * FROM "users"  WHERE "users"."id" < 18 UNION ALL SELECT * FROM "users"  WHERE "users"."id" > 99 )
+      }
+    end
+
+    it 'supports intersect' do
+      @m1.where(@table[:id].gt(18))
+      @m2.where(@table[:id].lt(99))
+      (@m1.intersect @m2).to_sql.must_be_like %{
+        ( SELECT * FROM "users"  WHERE "users"."id" > 18 INTERSECT SELECT * FROM "users"  WHERE "users"."id" < 99 )
+      }
+    end
+
+    it 'supports except' do
+      @m1.where(@table[:id].in(18..60))
+      @m2.where(@table[:id].in(40..99))
+      (@m1.except @m2).to_sql.must_be_like %{
+        ( SELECT * FROM "users"  WHERE "users"."id" BETWEEN 18 AND 60 EXCEPT SELECT * FROM "users"  WHERE "users"."id" BETWEEN 40 AND 99 )
+      }
+    end
+  end
 end

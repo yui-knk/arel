@@ -206,6 +206,22 @@ module Arel
         "NOT (#{visit o.expr})"
       end
 
+      def visit_Arel_Nodes_Union o
+        "( #{visit o.left} UNION #{visit o.right} )"
+      end
+
+      def visit_Arel_Nodes_UnionAll o
+        "( #{visit o.left} UNION ALL #{visit o.right} )"
+      end
+
+      def visit_Arel_Nodes_Intersect o
+        "( #{visit o.left} INTERSECT #{visit o.right} )"
+      end
+
+      def visit_Arel_Nodes_Except o
+        "( #{visit o.left} EXCEPT #{visit o.right} )"
+      end
+
       def visit_Arel_Table o
         if o.table_alias
           "#{quote_table_name o.name} #{quote_table_name o.table_alias}"
