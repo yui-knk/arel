@@ -27,6 +27,7 @@ lib/arel/nodes/delete_statement.rb
 lib/arel/nodes/does_not_match.rb
 lib/arel/nodes/equality.rb
 lib/arel/nodes/exists.rb
+lib/arel/nodes/except.rb
 lib/arel/nodes/function.rb
 lib/arel/nodes/greater_than.rb
 lib/arel/nodes/greater_than_or_equal.rb
@@ -36,6 +37,7 @@ lib/arel/nodes/having.rb
 lib/arel/nodes/in.rb
 lib/arel/nodes/inner_join.rb
 lib/arel/nodes/insert_statement.rb
+lib/arel/nodes/intersect.rb
 lib/arel/nodes/join.rb
 lib/arel/nodes/less_than.rb
 lib/arel/nodes/less_than_or_equal.rb
@@ -61,6 +63,8 @@ lib/arel/nodes/sum.rb
 lib/arel/nodes/table_alias.rb
 lib/arel/nodes/top.rb
 lib/arel/nodes/unary.rb
+lib/arel/nodes/union.rb
+lib/arel/nodes/union_all.rb
 lib/arel/nodes/unqualified_column.rb
 lib/arel/nodes/update_statement.rb
 lib/arel/nodes/values.rb
