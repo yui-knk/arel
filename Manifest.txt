@@ -26,8 +26,8 @@ lib/arel/nodes/count.rb
 lib/arel/nodes/delete_statement.rb
 lib/arel/nodes/does_not_match.rb
 lib/arel/nodes/equality.rb
-lib/arel/nodes/exists.rb
 lib/arel/nodes/except.rb
+lib/arel/nodes/exists.rb
 lib/arel/nodes/function.rb
 lib/arel/nodes/greater_than.rb
 lib/arel/nodes/greater_than_or_equal.rb
