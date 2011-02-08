@@ -1,4 +1,11 @@
-== 2.0.7 (unreleased)
+== 2.0.8  / 2010/02/08
+
+* Bug Fixes
+
+  * Added set operation support
+  * Fixed problems with *_any / *_all methods.
+
+== 2.0.7
 
 * Bug Fixes
 
