@@ -1,10 +1,6 @@
 module Arel
   module Nodes
-    class Lock < Arel::Nodes::Node
-      attr_reader :locking
-      def initialize locking = true
-        @locking = locking
-      end
+    class Lock < Arel::Nodes::Unary
     end
   end
 end

@@ -56,7 +56,7 @@ module Arel
       end
 
       def test_lock
-        lock = Nodes::Lock.new
+        lock = Nodes::Lock.new true
         @visitor.accept lock
         assert_equal [lock], @collector.calls
       end
