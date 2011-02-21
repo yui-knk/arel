@@ -213,6 +213,8 @@ module Arel
 
     private
     def collapse exprs
+      exprs.map! { |x| x.class == ::String ? Arel.sql(x) : x }
+
       return exprs.first if exprs.length == 1
 
       right = exprs.pop
