@@ -1,3 +1,11 @@
+== 2.0.9  / unreleased
+
+* Bug Fixes
+
+  * Strings passed to StringManager#on will be automatically tagged as SQL
+    literals. Fixes Rails LH #6384
+    https://rails.lighthouseapp.com/projects/8994/tickets/6384-activerecord-303-and-3-0-stable-generate-invalid-sql-for-has_many-through-association-with-conditions
+
 == 2.0.8  / 2010/02/08
 
 * Bug Fixes
