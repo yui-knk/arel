@@ -2,6 +2,9 @@
 
 * Bug Fixes
 
+  * Custom LOCK strings are allowed. Fixes LH # 6399
+    https://rails.lighthouseapp.com/projects/8994/tickets/6399-allow-database-specific-locking-clauses-to-be-used
+
   * Strings passed to StringManager#on will be automatically tagged as SQL
     literals. Fixes Rails LH #6384
     https://rails.lighthouseapp.com/projects/8994/tickets/6384-activerecord-303-and-3-0-stable-generate-invalid-sql-for-has_many-through-association-with-conditions
