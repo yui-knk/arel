@@ -24,10 +24,5 @@ module Arel
       node.each.each { |n| list << n }
       assert_equal [node], list
     end
-
-    def test_enumerable
-      node = Nodes::Node.new
-      assert_kind_of Enumerable, node
-    end
   end
 end
