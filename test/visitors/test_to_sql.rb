@@ -8,6 +8,21 @@ module Arel
         @attr = Table.new(:users)[:id]
       end
 
+      it "should be thread safe around usage of last_column" do
+        table = Table.new(:users)
+
+        visit_integer_column = Thread.new do
+          Thread.stop
+          @visitor.send(:visit_Arel_Attributes_Attribute, @attr)
+        end
+
+        @visitor.accept(table[:name])
+        assert_equal(:string, @visitor.send(:last_column).type)
+        visit_integer_column.run
+        visit_integer_column.join
+        assert_equal(:string, @visitor.send(:last_column).type)
+      end
+
       describe 'equality' do
         it 'should handle false' do
           sql = @visitor.accept Nodes::Equality.new(false, false)

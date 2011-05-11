@@ -1,3 +1,10 @@
+== 2.0.10 (unreleased)
+
+* Bug Fixes
+
+  * Fix thread safety issue in ToSql visitor.  Thanks Damon McCormick and
+    Cameron Walters!
+
 == 2.0.9  / 2010/02/25
 
 * Bug Fixes
