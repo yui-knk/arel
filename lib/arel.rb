@@ -29,7 +29,7 @@ require 'arel/sql_literal'
 ####
 
 module Arel
-  VERSION = '2.0.9'
+  VERSION = '2.0.10'
 
   def self.sql raw_sql
     Arel::Nodes::SqlLiteral.new raw_sql
