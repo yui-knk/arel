@@ -116,7 +116,7 @@ key on UpdateManager using UpdateManager#key=
       def visit_Arel_Nodes_Values o
         "VALUES (#{o.expressions.zip(o.columns).map { |value, attr|
           if Nodes::SqlLiteral === value
-            visit_Arel_Nodes_SqlLiteral value
+            visit value
           else
             quote(value, attr && column_for(attr))
           end
