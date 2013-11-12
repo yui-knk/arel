@@ -1,3 +1,13 @@
+== 3.0.3 / 2013-11-12
+
+* Enhancements
+
+  * Support ANSI 2003 window functions
+
+* Bug Fixes
+
+  * Fix joins in Informix
+
 == 3.0.2 / 2012-02-21
 
 * Enhancements
