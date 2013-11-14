@@ -80,6 +80,7 @@ lib/arel/visitors/sqlite.rb
 lib/arel/visitors/to_sql.rb
 lib/arel/visitors/visitor.rb
 lib/arel/visitors/where_sql.rb
+lib/arel/window_predications.rb
 test/attributes/test_attribute.rb
 test/helper.rb
 test/nodes/test_as.rb
