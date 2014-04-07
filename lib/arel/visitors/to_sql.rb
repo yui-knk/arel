@@ -493,7 +493,7 @@ module Arel
       end
 
       def visit_Arel_Nodes_And o, a
-        o.children.flatten.map { |x| visit x, a }.join ' AND '
+        o.children.map { |x| visit x, a }.join ' AND '
       end
 
       def visit_Arel_Nodes_Or o, a
