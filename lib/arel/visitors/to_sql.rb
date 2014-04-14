@@ -550,6 +550,7 @@ module Arel
 
       alias :visit_Arel_Nodes_BindParam  :literal
       alias :visit_Arel_Nodes_SqlLiteral :literal
+      alias :visit_Arel_SqlLiteral       :literal # This is deprecated
       alias :visit_Bignum                :literal
       alias :visit_Fixnum                :literal
 

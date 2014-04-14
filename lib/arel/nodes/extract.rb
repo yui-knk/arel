@@ -1,6 +1,8 @@
 module Arel
   module Nodes
+
     class Extract < Arel::Nodes::Unary
+      include Arel::Expression
       include Arel::Predications
 
       attr_accessor :field
