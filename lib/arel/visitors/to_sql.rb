@@ -366,7 +366,7 @@ module Arel
       end
 
       def visit_Arel_Nodes_Extract o, a
-        "EXTRACT(#{o.field.to_s.upcase} FROM #{visit o.expr, a})#{o.alias ? " AS #{visit o.alias, a}" : ''}"
+        "EXTRACT(#{o.field.to_s.upcase} FROM #{visit o.expr, a})"
       end
 
       def visit_Arel_Nodes_Count o, a
