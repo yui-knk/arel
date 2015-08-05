@@ -588,7 +588,7 @@ module Arel
         left      = Table.new :users
         right     = left.alias
         predicate = left[:id].eq(right[:id])
-        manager   = Arel::SelectManager.new
+        manager   = Arel::SelectManager.new Table.engine
 
         manager.from left
         manager.join(right, Nodes::FullOuterJoin).on(predicate)
@@ -603,7 +603,7 @@ module Arel
         left      = Table.new :users
         right     = left.alias
         predicate = left[:id].eq(right[:id])
-        manager   = Arel::SelectManager.new
+        manager   = Arel::SelectManager.new Table.engine
 
         manager.from left
         manager.join(right, Nodes::RightOuterJoin).on(predicate)
