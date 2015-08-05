@@ -84,6 +84,20 @@ module Arel
         um.table join_source
         um.to_sql.must_be_like %{ UPDATE "users" INNER JOIN "posts" }
       end
+
+      it 'generates an update statement with joins with database_name' do
+        um = Arel::UpdateManager.new Table.engine
+
+        table = Table.new(:users)
+        table.database_name = "update_db"
+        join_source = Arel::Nodes::JoinSource.new(
+          table,
+          [table.create_join(Table.new(:posts).tap {|t| t.database_name = "update_db_posts"})]
+        )
+
+        um.table join_source
+        um.to_sql.must_be_like %{ UPDATE "update_db"."users" INNER JOIN "update_db_posts"."posts" }
+      end
     end
 
     describe 'where' do

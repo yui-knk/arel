@@ -111,10 +111,36 @@ module Arel
                ON "users"."id" = "users_2"."id"
           }
         end
+
+        it 'takes a second argument for join type with database_name' do
+          @relation.database_name = "right_db"
+          right     = @relation.alias
+          predicate = @relation[:id].eq(right[:id])
+          mgr = @relation.join(right, Nodes::OuterJoin).on(predicate)
+
+          mgr.to_sql.must_be_like %{
+           SELECT FROM "right_db"."users"
+             LEFT OUTER JOIN "right_db"."users" "users_2"
+               ON "users"."id" = "users_2"."id"
+          }
+        end
       end
 
       describe 'join' do
         it 'creates an outer join' do
+          @relation.database_name = "right_db"
+          right     = @relation.alias
+          predicate = @relation[:id].eq(right[:id])
+          mgr = @relation.outer_join(right).on(predicate)
+
+          mgr.to_sql.must_be_like %{
+            SELECT FROM "right_db"."users"
+              LEFT OUTER JOIN "right_db"."users" "users_2"
+                ON "users"."id" = "users_2"."id"
+          }
+        end
+
+        it 'creates an outer join with database_name' do
           right     = @relation.alias
           predicate = @relation[:id].eq(right[:id])
           mgr = @relation.outer_join(right).on(predicate)

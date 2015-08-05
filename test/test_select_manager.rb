@@ -147,6 +147,24 @@ module Arel
           mgr.join(right).on("omg", "123")
           mgr.to_sql.must_be_like %{ SELECT  FROM "users" INNER JOIN "users" "users_2" ON omg AND 123 }
         end
+
+        it 'converts to sqlliterals with database_name' do
+          table = Table.new :users
+          table.database_name = "database1"
+          right = table.alias
+          mgr   = table.from table
+          mgr.join(right).on("omg")
+          mgr.to_sql.must_be_like %{ SELECT  FROM "database1"."users" INNER JOIN "database1"."users" "users_2" ON omg }
+        end
+
+        it 'converts to sqlliterals with multiple items with database_name' do
+          table = Table.new :users
+          table.database_name = :database1
+          right = table.alias
+          mgr   = table.from table
+          mgr.join(right).on("omg", "123")
+          mgr.to_sql.must_be_like %{ SELECT  FROM "database1"."users" INNER JOIN "database1"."users" "users_2" ON omg AND 123 }
+        end
       end
     end
 
@@ -374,6 +392,39 @@ module Arel
           SELECT * FROM "replies"
         }
       end
+
+      it "should support WITH RECURSIVE with database_name" do
+        comments           = Table.new(:comments)
+        comments_id        = comments[:id]
+        comments_parent_id = comments[:parent_id]
+
+        replies            = Table.new(:replies)
+        replies.database_name = :replies_databaase
+        replies_id         = replies[:id]
+
+        recursive_term = Arel::SelectManager.new Table.engine
+        recursive_term.from(comments).project(comments_id, comments_parent_id).where(comments_id.eq 42)
+
+        non_recursive_term = Arel::SelectManager.new Table.engine
+        non_recursive_term.from(comments).project(comments_id, comments_parent_id).join(replies).on(comments_parent_id.eq replies_id)
+
+        union = recursive_term.union(non_recursive_term)
+
+        as_statement = Arel::Nodes::As.new replies, union
+
+        manager = Arel::SelectManager.new Table.engine
+        manager.with(:recursive, as_statement).from(replies).project(Arel.star)
+
+        sql = manager.to_sql
+        sql.must_be_like %{
+          WITH RECURSIVE "replies_databaase"."replies" AS (
+              SELECT "comments"."id", "comments"."parent_id" FROM "comments" WHERE "comments"."id" = 42
+            UNION
+              SELECT "comments"."id", "comments"."parent_id" FROM "comments" INNER JOIN "replies_databaase"."replies" ON "comments"."parent_id" = "replies"."id"
+          )
+          SELECT * FROM "replies_databaase"."replies"
+        }
+      end
     end
 
     describe 'ast' do
@@ -500,6 +551,45 @@ module Arel
                "users"."name" = "users_2"."name"
         }
       end
+
+      it 'takes two params with database_name' do
+        left      = Table.new :users
+        left.database_name = :database_name
+        right     = left.alias
+        predicate = left[:id].eq(right[:id])
+        manager   = Arel::SelectManager.new Table.engine
+
+        manager.from left
+        manager.join(right).on(predicate, predicate)
+        manager.to_sql.must_be_like %{
+           SELECT FROM "database_name"."users"
+             INNER JOIN "database_name"."users" "users_2"
+               ON "users"."id" = "users_2"."id" AND
+               "users"."id" = "users_2"."id"
+        }
+      end
+
+      it 'takes three params with database_name' do
+        left      = Table.new :users
+        left.database_name = :database_name
+        right     = left.alias
+        predicate = left[:id].eq(right[:id])
+        manager   = Arel::SelectManager.new Table.engine
+
+        manager.from left
+        manager.join(right).on(
+          predicate,
+          predicate,
+          left[:name].eq(right[:name])
+        )
+        manager.to_sql.must_be_like %{
+           SELECT FROM "database_name"."users"
+             INNER JOIN "database_name"."users" "users_2"
+               ON "users"."id" = "users_2"."id" AND
+               "users"."id" = "users_2"."id" AND
+               "users"."name" = "users_2"."name"
+        }
+      end
     end
 
     it 'should hand back froms' do
@@ -584,6 +674,38 @@ module Arel
         }
       end
 
+      it 'responds to join with database_name' do
+        left      = Table.new :users
+        left.database_name = :database_name
+        right     = left.alias
+        predicate = left[:id].eq(right[:id])
+        manager   = Arel::SelectManager.new Table.engine
+
+        manager.from left
+        manager.join(right).on(predicate)
+        manager.to_sql.must_be_like %{
+           SELECT FROM "database_name"."users"
+             INNER JOIN "database_name"."users" "users_2"
+               ON "users"."id" = "users_2"."id"
+        }
+      end
+
+      it 'takes a class with database_name' do
+        left      = Table.new :users
+        left.database_name = "database_name2"
+        right     = left.alias
+        predicate = left[:id].eq(right[:id])
+        manager   = Arel::SelectManager.new Table.engine
+
+        manager.from left
+        manager.join(right, Nodes::OuterJoin).on(predicate)
+        manager.to_sql.must_be_like %{
+           SELECT FROM "database_name2"."users"
+             LEFT OUTER JOIN "database_name2"."users" "users_2"
+               ON "users"."id" = "users_2"."id"
+        }
+      end
+
       it 'noops on nil' do
         manager   = Arel::SelectManager.new Table.engine
         manager.join(nil).must_equal manager
@@ -606,6 +728,22 @@ module Arel
         }
       end
 
+      it 'responds to join with database_name' do
+        left      = Table.new :users
+        left.database_name = "database_name"
+        right     = left.alias
+        predicate = left[:id].eq(right[:id])
+        manager   = Arel::SelectManager.new Table.engine
+
+        manager.from left
+        manager.outer_join(right).on(predicate)
+        manager.to_sql.must_be_like %{
+           SELECT FROM "database_name"."users"
+             LEFT OUTER JOIN "database_name"."users" "users_2"
+               ON "users"."id" = "users_2"."id"
+        }
+      end
+
       it 'noops on nil' do
         manager   = Arel::SelectManager.new Table.engine
         manager.outer_join(nil).must_equal manager
@@ -623,12 +761,32 @@ module Arel
                      manager.to_sql
       end
 
+      it 'returns inner join sql with database_name' do
+        table   = Table.new :users
+        table.database_name = "aaa_bbb"
+        aliaz   = table.alias
+        manager = Arel::SelectManager.new Table.engine
+        manager.from Nodes::InnerJoin.new(aliaz, table[:id].eq(aliaz[:id]))
+        assert_match 'INNER JOIN "aaa_bbb"."users" "users_2" "users"."id" = "users_2"."id"',
+                     manager.to_sql
+      end
+
       it 'returns outer join sql' do
         table   = Table.new :users
         aliaz   = table.alias
         manager = Arel::SelectManager.new Table.engine
         manager.from Nodes::OuterJoin.new(aliaz, table[:id].eq(aliaz[:id]))
         assert_match 'LEFT OUTER JOIN "users" "users_2" "users"."id" = "users_2"."id"',
+                     manager.to_sql
+      end
+
+      it 'returns outer join sql with database_name' do
+        table   = Table.new :users
+        table.database_name = "aaa_bbb"
+        aliaz   = table.alias
+        manager = Arel::SelectManager.new Table.engine
+        manager.from Nodes::OuterJoin.new(aliaz, table[:id].eq(aliaz[:id]))
+        assert_match 'LEFT OUTER JOIN "aaa_bbb"."users" "users_2" "users"."id" = "users_2"."id"',
                      manager.to_sql
       end
 
@@ -649,6 +807,25 @@ module Arel
         }
       end
 
+      it 'can have a non-table alias as relation name with database_name' do
+        users    = Table.new :users
+        users.database_name = "user_db"
+        comments = Table.new :comments
+        comments.database_name = "comment_db"
+
+        counts = comments.from(comments).
+          group(comments[:user_id]).
+          project(
+            comments[:user_id].as("user_id"),
+            comments[:user_id].count.as("count")
+          ).as("counts")
+
+        joins = users.join(counts).on(counts[:user_id].eq(10))
+        joins.to_sql.must_be_like  %{
+          SELECT FROM "user_db"."users" INNER JOIN (SELECT "comments"."user_id" AS user_id, COUNT("comments"."user_id") AS count FROM "comment_db"."comments" GROUP BY "comments"."user_id") counts ON counts."user_id" = 10
+        }
+      end
+
       it "joins itself" do
         left      = Table.new :users
         right     = left.alias
@@ -661,6 +838,23 @@ module Arel
         mgr.to_sql.must_be_like %{
            SELECT * FROM "users"
              INNER JOIN "users" "users_2"
+               ON "users"."id" = "users_2"."id"
+        }
+      end
+
+      it "joins itself with database_name" do
+        left      = Table.new :users
+        left.database_name = "user_data"
+        right     = left.alias
+        predicate = left[:id].eq(right[:id])
+
+        mgr = left.join(right)
+        mgr.project Nodes::SqlLiteral.new('*')
+        mgr.on(predicate).must_equal mgr
+
+        mgr.to_sql.must_be_like %{
+           SELECT * FROM "user_data"."users"
+             INNER JOIN "user_data"."users" "users_2"
                ON "users"."id" = "users_2"."id"
         }
       end

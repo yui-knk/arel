@@ -6,7 +6,7 @@ module Arel
     @engine = nil
     class << self; attr_accessor :engine; end
 
-    attr_accessor :name, :engine, :aliases, :table_alias
+    attr_accessor :name, :engine, :aliases, :table_alias, :database_name
 
     # TableAlias and Table both have a #table_name which is the name of the underlying table
     alias :table_name :name
@@ -18,6 +18,7 @@ module Arel
       @aliases = []
       @table_alias = nil
       @primary_key = nil
+      @database_name = nil
 
       if Hash === engine
         @engine  = engine[:engine] || Table.engine

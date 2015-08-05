@@ -612,6 +612,7 @@ module Arel
       end
 
       def visit_Arel_Table o, collector
+        collector << "#{quote_table_name o.database_name}." if o.database_name
         if o.table_alias
           collector << "#{quote_table_name o.name} #{quote_table_name o.table_alias}"
         else
